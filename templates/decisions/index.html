@@ -16,47 +16,51 @@
   </form>
 </div>
 
-<ul id="decision-list">
-  {% for decision in decisions %}
-  <li>
-    <a class="is-size-4" href="{% url 'decisions:detail' decision.pk %}">
-      {{ decision.title }}
-    </a>
-    <div class="float-right">
-      <a
-        class="button is-info is-small is-rounded"
-        href="{% url 'decisions:update' decision.pk %}"
+<div id="decision-list">
+  <ul>
+    {% for decision in decisions %}
+    <li>
+      <a class="is-size-4" href="{% url 'decisions:detail' decision.pk %}">
+        {{ decision.title }}
+      </a>
+      <div class="float-right">
+        <a
+          class="button is-info is-small is-rounded"
+          href="{% url 'decisions:update' decision.pk %}"
+        >
+          Edit
+        </a>
+        <a
+          class="button is-danger is-small is-rounded"
+          href="{% url 'decisions:delete' decision.pk %}"
+          >Delete
+        </a>
+      </div>
+    </li>
+    {% empty %}
+    <li>No decisions found.</li>
+    {% endfor %}
+  </ul>
+
+  <div class="pagination mt-3">
+    <span class="step-links">
+      {% if page_obj.has_previous %}
+      <a class="button" href="?page=1">First</a>
+      <a class="button" href="?page={{ page_obj.previous_page_number }}"
+        >Previous</a
       >
-        Edit
-      </a>
-      <a
-        class="button is-danger is-small is-rounded"
-        href="{% url 'decisions:delete' decision.pk %}"
-        >Delete
-      </a>
-    </div>
-  </li>
-  {% empty %}
-  <li>No decisions found.</li>
-  {% endfor %}
-</ul>
+      {% endif %}
 
-<div class="pagination mt-3">
-  <span class="step-links">
-    {% if page_obj.has_previous %}
-    <a class="button" href="?page=1">First</a>
-    <a class="button" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
+      <div class="current my-2">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </div>
 
-    <div class="current my-2">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-    </div>
-
-    {% if page_obj.has_next %}
-    <a class="button" href="?page={{ page_obj.next_page_number }}">Next</a>
-    <a class="button" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-  </span>
+      {% if page_obj.has_next %}
+      <a class="button" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="button" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+    </span>
+  </div>
 </div>
 
 {% endblock %}
