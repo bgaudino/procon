@@ -1,0 +1,31 @@
+{% extends 'core/layout.html' %} {% block body %}
+<h1 class="is-size-2 mb-4">Register</h1>
+<form method="post" action="{% url 'users:register' %}">
+  {% csrf_token %} {% for field in form %}
+  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {% if field.name == 'email' %}
+  <input
+    id="{{ field.id_for_label }}"
+    name="{{ field.html_name }}"
+    type="{{ field.name }}"
+    class="input is-primary mb-3"
+    placeholder="{{ field.label }}"
+  />
+  {% else %}
+  <input
+    id="{{ field.id_for_label }}"
+    name="{{ field.html_name }}"
+    type="password"
+    class="input is-primary mb-3"
+    placeholder="{{ field.label }}"
+  />
+  {% endif %} {% if field.errors %}
+  <p>{{ field.help_text }}</p>
+  {% endif %} {% endfor %}
+  <button type="submit" class="button is-primary">Submit</button>
+  {{ form.non_field_errors }}
+</form>
+<p class="my-2">
+  Already have an account? <a href="{% url 'users:login' %}">Login</a>
+</p>
+{{ logout_message }} {% endblock %}

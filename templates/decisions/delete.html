@@ -1,0 +1,11 @@
+{% extends "core/layout.html" %} {% block body %}
+<div class="m-2 p-2">
+  <form method="post">
+    {% csrf_token %}
+    <p class="mb-2">Are you sure you want to delete "{{ object }}"?</p>
+    {{ form }}
+    <button class="button" type="button" onclick="window.history.back()">Cancel</button>
+    <button type="submit" class="button is-danger">Delete</button>
+  </form>
+</div>
+{% endblock %}

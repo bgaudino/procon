@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %} {% block styles %}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    {% endblock %}
+    <title>Pros and Cons</title>
+  </head>
+  <body>
+    <nav
+      class="navbar is-primary"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div class="container">
+        <div class="navbar-brand">
+          <p id="logo" class="navbar-item">Pros and Cons</p>
+          <a class="navbar-item" href="{% url 'decisions:index' %}"
+            >Home</a
+          >
+          {% if user.is_authenticated %}
+          <a class="navbar-item" href="{% url 'users:logout' %}"
+            >Logout, {{ user.email }}</a
+          >
+          {% else %}
+          <a class="navbar-item" href="{% url 'users:login' %}">Login</a>
+          <a class="navbar-item navbar-end" href="{% url 'users:register' %}"
+            >Register</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    <div class="container px-4 py-1">{% block body %}{% endblock %}</div>
+    <script src="{% static 'js/formToggle.js' %}"></script>
+    {% block scripts %} {% endblock %}
+  </body>
+</html>

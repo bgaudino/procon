@@ -1,0 +1,35 @@
+{% extends 'core/layout.html' %} {% block body %} {% load model_extras %}
+<h1 class="is-size-2">Update {{ object|model_name }}</h1>
+<form method="post" action="{{ action }}">
+  {% csrf_token %} {% for field in form %}
+  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+  <input
+    id="{{ field.id_for_label }}"
+    name="{{ field.html_name }}"
+    type="{% if field.html_name == 'weight' %}number{% else %}text{% endif %}"
+    class="input is-primary mb-3"
+    placeholder="{{ field.label }}"
+    value="{{ field.value }}"
+  />
+  {% if field.errors %}
+  <p>{{ field.help_text }}</p>
+  {% endif %} {% endfor %}
+  <button type="button" class="button" onclick="window.history.back()">
+    Cancel
+  </button>
+  <button type="submit" class="button is-primary">Update</button>
+</form>
+
+<script>
+  const inputs = Array.from(document.querySelectorAll("input")).filter(
+    (input) => input.type !== "hidden"
+  );
+  const input = inputs[0];
+  input.focus();
+
+  // Move cursor to end of input
+  const value = input.value;
+  input.value = "";
+  input.value = value;
+</script>
+{% endblock %}
