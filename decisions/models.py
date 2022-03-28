@@ -28,7 +28,6 @@ class Option(TimestampMixin):
 
     def __str__(self):
         return self.title
-    
 
     def choose(self):
         options = Option.objects.filter(decision=self.decision).exclude(pk=self.pk)
