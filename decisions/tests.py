@@ -1,7 +1,51 @@
 from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import authenticate
 
 from .models import Decision, Option, Pro, Con
 from users.models import User
+
+
+class DecisionListTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(email="test", password="test")
+        self.decisionA = Decision.objects.create(
+            title="A", description="Test description", user=self.user
+        )
+        self.decisionB = Decision.objects.create(
+            title="B", description="Test description", user=self.user
+        )
+        self.decisionC = Decision.objects.create(
+            title="C", description="Test description", user=self.user
+        )
+        Option.objects.create(decision=self.decisionA, title="A", is_chosen=True)
+        Option.objects.create(decision=self.decisionB, title="B", is_chosen=False)
+        self.client.force_login(self.user)
+
+    def test_no_filter(self):
+        authenticate(email="test", password="test")
+        response = self.client.get(reverse("decisions:index"))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(
+            response.context["decisions"],
+            [self.decisionC, self.decisionB, self.decisionA],
+        )
+
+    def test_filter_by_open_status(self):
+        response = self.client.get(f"{reverse('decisions:index')}?status=open")
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(
+            response.context["decisions"],
+            [self.decisionC, self.decisionB],
+        )
+
+    def test_filter_by_closed_status(self):
+        response = self.client.get(f"{reverse('decisions:index')}?status=closed")
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(
+            response.context["decisions"],
+            [self.decisionA],
+        )
 
 
 class OptionScoreTest(TestCase):
