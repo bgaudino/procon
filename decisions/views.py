@@ -24,7 +24,7 @@ class DecisionView(ProtectedView, generic.ListView):
             decisions = decisions.exclude(options__is_chosen=True)
         elif decision_status == "closed":
             decisions = decisions.filter(options__is_chosen=True)
-        return decisions
+        return decisions.order_by("-created_at")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -44,7 +44,9 @@ class DecisionDetailView(ProtectedView, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["chosen_option"] = get_object_or_none(Option, decision=self.object, is_chosen=True)
+        context["chosen_option"] = get_object_or_none(
+            Option, decision=self.object, is_chosen=True
+        )
         context["option_form"] = OptionForm()
         context["pro_form"] = ProForm()
         context["con_form"] = ConForm()
