@@ -17,7 +17,7 @@ class LoginView(LoginView):
         return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
-        return "/"
+        return reverse("decisions:index")
 
 
 class LogoutView(LogoutView):

@@ -2,6 +2,25 @@
 
 <h1 class="is-size-2">Decisions</h1>
 
+<!-- Filters -->
+<div>
+  <a
+    href="{% url 'decisions:index' %}"
+    class="button is-small {% if not request.GET.status %}is-active is-outlined{% else %}is-white{% endif %}"
+    >All</a
+  >
+  <a
+    href="{% url 'decisions:index' %}?status=open"
+    class="button is-small {% if request.GET.status == 'open' %}is-active is-outlined{% else %}is-white{% endif %}"
+    >Open</a
+  >
+  <a
+    href="{% url 'decisions:index' %}?status=closed"
+    class="button is-small {% if request.GET.status == 'closed' %}is-active is-outlined{% else %}is-white{% endif %}"
+    >Closed</a
+  >
+</div>
+
 <button
   class="button is-primary my-3 toggle"
   data-target="decision-form"

@@ -17,17 +17,19 @@ class DecisionView(ProtectedView, generic.ListView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated:
-            return (
-                Decision.objects.filter(user=user)
-                .exclude(options__is_chosen=True)
-                .order_by("-created_at")
-            )
-        return Decision.objects.none()
+        decisions = DecisionView.model.objects.filter(user=user)
+        decision_status = self.kwargs.get("status")
+        decision_status = self.request.GET.get("status")
+        if decision_status == "open":
+            decisions = decisions.exclude(options__is_chosen=True)
+        elif decision_status == "closed":
+            decisions = decisions.filter(options__is_chosen=True)
+        return decisions
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = DecisionForm()
+        context["filters"] = ["all", "open", "closed"]
         return context
 
 

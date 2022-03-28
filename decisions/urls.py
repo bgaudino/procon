@@ -4,9 +4,9 @@ from . import views
 
 urlpatterns = [
     path("", views.DecisionView.as_view(), name="index"),
+    path("create/", views.NewDecisionView.as_view(), name="create"),
     path("<int:pk>/", views.DecisionDetailView.as_view(), name="detail"),
     path("<int:pk>/delete/", views.DecisionDeleteView.as_view(), name="delete"),
-    path("create/", views.NewDecisionView.as_view(), name="create"),
     path("<int:pk>/update/", views.DecisionUpdateView.as_view(), name="update"),
     path("options/create/", views.NewOptionView.as_view(), name="options_create"),
     path(
@@ -19,7 +19,11 @@ urlpatterns = [
         views.OptionDeleteView.as_view(),
         name="options_delete",
     ),
-    path("options/<int:pk>/choose/", views.OptionChooseView.as_view(), name="options_choose"),
+    path(
+        "options/<int:pk>/choose/",
+        views.OptionChooseView.as_view(),
+        name="options_choose",
+    ),
     path("pros/create/", views.NewProView.as_view(), name="pros_create"),
     path("cons/create/", views.NewConView.as_view(), name="cons_create"),
     path("pros/<int:pk>/delete/", views.ProDeleteView.as_view(), name="pros_delete"),
