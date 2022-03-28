@@ -36,33 +36,40 @@
 <!-- Options -->
 <ul id="option-list">
   {% for option in decision.options.all %}
-  <li>
-    <h2 class="is-size-3">{{ option.title }}</h2>
-    <a
-      class="button is-info is-small is-rounded"
-      href="{% url 'decisions:options_update' option.pk %}"
-    >
-      Edit
-    </a>
-    <a
-      class="button is-danger is-small is-rounded"
-      href="{% url 'decisions:options_delete' option.pk %}"
-    >
-      Delete
-    </a>
-    <hr class="m-1" />
+  <li class="card p-5 my-5">
+    <div class="mb-5 has-text-centered">
+      <h2 class="is-size-3">{{ option.title }}</h2>
+      <p class="is-size-6 mb-3">
+        {% with score=option.get_score %} {{ score }} point{{ score|pluralize }}
+        {% endwith %}
+      </p>
+      <a
+        class="button is-info is-small is-rounded"
+        href="{% url 'decisions:options_update' option.pk %}"
+      >
+        Edit
+      </a>
+      <a
+        class="button is-danger is-small is-rounded"
+        href="{% url 'decisions:options_delete' option.pk %}"
+      >
+        Delete
+      </a>
+    </div>
 
     <!-- Argyments -->
     <div class="columns">
       <!-- Pros -->
       <div class="column is-half">
-        <h3 class="is-size-5">Pros</h3>
+        <h3 class="is-size-4">Pros</h3>
         <ul>
           {% for pro in option.pros.all %}
-          <li>
-            {{ pro.description }}
-            <span class="tag is-success">{{ pro.weight }}</span>
-            <span class="float-right">
+          <li class="is-flex is-justify-content-space-between mb-2">
+            <span>
+              {{ pro.description }}
+              <span class="tag is-success">{{ pro.weight }}</span>
+            </span>
+            <span>
               <a
                 class="button is-small is-info is-rounded"
                 href="{% url 'decisions:pros_update' pro.pk %}"
@@ -77,7 +84,9 @@
           </li>
           {% endfor %}
         </ul>
-        <a class="toggle" data-target="pro-{{ option.pk }}">Add Pro</a>
+        <a class="toggle button is-success" data-target="pro-{{ option.pk }}"
+          >Add Pro</a
+        >
         <form
           id="pro-{{ option.pk }}"
           class="is-hidden"
@@ -92,13 +101,15 @@
 
       <!--- Cons -->
       <div class="column is-half">
-        <h3 class="is-size-5">Cons</h3>
+        <h3 class="is-size-4">Cons</h3>
         <ul>
           {% for con in option.cons.all %}
-          <li>
-            {{ con.description }}
-            <span class="tag is-danger">{{ con.weight }}</span>
-            <span class="float-right">
+          <li class="is-flex is-justify-content-space-between mb-2">
+            <span>
+              {{ con.description }}
+              <span class="tag is-danger">{{ con.weight }}</span>
+            </span>
+            <span>
               <a
                 class="button is-small is-info is-rounded"
                 href="{% url 'decisions:cons_update' con.pk %}"
@@ -114,7 +125,9 @@
           </li>
           {% endfor %}
         </ul>
-        <a class="toggle" data-target="con-{{ option.pk }}">Add Con</a>
+        <a class="toggle button is-warning" data-target="con-{{ option.pk }}"
+          >Add Con</a
+        >
         <form
           id="con-{{ option.pk }}"
           class="is-hidden"
