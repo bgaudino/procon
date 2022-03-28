@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views import generic
+from django.views import generic, View
+from django.http import HttpResponseRedirect, Http404
 
 from .models import Decision, Option, Pro, Con
 from .forms import DecisionForm, OptionForm, ProForm, ConForm
 from core.views import ProtectedView
+from core.utils import get_object_or_none
 
 
 class DecisionView(ProtectedView, generic.ListView):
@@ -18,7 +20,7 @@ class DecisionView(ProtectedView, generic.ListView):
         if user.is_authenticated:
             return (
                 Decision.objects.filter(user=user)
-                .prefetch_related("options", "options__pros", "options__cons")
+                .exclude(options__is_chosen=True)
                 .order_by("-created_at")
             )
         return Decision.objects.none()
@@ -40,6 +42,7 @@ class DecisionDetailView(ProtectedView, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["chosen_option"] = get_object_or_none(Option, decision=self.object, is_chosen=True)
         context["option_form"] = OptionForm()
         context["pro_form"] = ProForm()
         context["con_form"] = ConForm()
@@ -173,3 +176,18 @@ class ConUpdateView(ProtectedView, generic.UpdateView):
             "decisions:cons_update", kwargs={"pk": self.object.pk}
         )
         return context
+
+
+class OptionChooseView(ProtectedView, View):
+    def post(self, request, pk):
+        data = request.POST
+        try:
+            option = Option.objects.get(pk=pk, decision__user=request.user)
+        except Option.DoesNotExist:
+            raise Http404
+        if data["is_chosen"] == "true":
+            option.choose()
+        elif data["is_chosen"] == "false":
+            option.is_chosen = False
+            option.save()
+        return HttpResponseRedirect(option.decision.get_absolute_url())

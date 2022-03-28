@@ -4,6 +4,11 @@
 <div id="decision-info">
   <h1 class="is-size-2">{{ decision.title }}</h1>
   <p>{{ decision.description }}</p>
+  {% if chosen_option %}
+  <p class="is-size-6">
+    <strong>Chosen option:</strong> {{ chosen_option.title }}
+  </p>
+  {% endif %}
 </div>
 <div class="my-3">
   <a class="button is-info" href="{% url 'decisions:update' decision.id %}"
@@ -38,11 +43,27 @@
   {% for option in decision.options.all %}
   <li class="card p-5 my-5">
     <div class="mb-5 has-text-centered">
-      <h2 class="is-size-3">{{ option.title }}</h2>
-      <p class="is-size-6 mb-3">
+      <h2 class="is-size-3">
+        {{ option.title }}{% if option.is_chosen %} ✔️ {% endif %}
+      </h2>
+      <p class="is-size-5 mb-3">
         {% with score=option.get_score %} {{ score }} point{{ score|pluralize }}
         {% endwith %}
       </p>
+      <form
+        class="mb-3"
+        action="{% url 'decisions:options_choose' option.pk %}"
+        method="post"
+      >
+        {% csrf_token %} {% if option.is_chosen %}
+        <input type="hidden" name="is_chosen" value="false" />
+        <button type="submit" class="button is-danger">Unchoose</button>
+
+        {% else %}
+        <input type="hidden" name="is_chosen" value="true" />
+        <button type="submit" class="button is-primary">Choose</button>
+        {% endif %}
+      </form>
       <a
         class="button is-info is-small is-rounded"
         href="{% url 'decisions:options_update' option.pk %}"

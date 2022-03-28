@@ -19,6 +19,7 @@ urlpatterns = [
         views.OptionDeleteView.as_view(),
         name="options_delete",
     ),
+    path("options/<int:pk>/choose/", views.OptionChooseView.as_view(), name="options_choose"),
     path("pros/create/", views.NewProView.as_view(), name="pros_create"),
     path("cons/create/", views.NewConView.as_view(), name="cons_create"),
     path("pros/<int:pk>/delete/", views.ProDeleteView.as_view(), name="pros_delete"),
