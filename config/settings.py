@@ -31,6 +31,8 @@ DEBUG = config["DEBUG"]
 
 ALLOWED_HOSTS = config["ALLOWED_HOSTS"]
 
+CSRF_TRUSTED_ORIGINS = config["CSRF_TRUSTED_ORIGINS"]
+
 
 # Application definition
 
