@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %} {% block styles %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&display=swap" rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css"
@@ -21,14 +24,13 @@
     >
       <div class="container">
         <div class="navbar-brand">
-          <p id="logo" class="navbar-item">Option Paralysis</p>
+	  <p id="logo" class="navbar-item">Option Paralysis</p>
+          {% if user.is_authenticated %}
           <a class="navbar-item" href="{% url 'decisions:index' %}"
             >Home</a
           >
-          {% if user.is_authenticated %}
-          <a class="navbar-item" href="{% url 'users:logout' %}"
-            >Logout, {{ user.email }}</a
-          >
+	  <a class="navbar-item" href="{% url 'users:logout' %}"
+	  >Logout<span class="is-hidden-mobile">, {{ user.email }}</span></a>
           {% else %}
           <a class="navbar-item" href="{% url 'users:login' %}">Login</a>
           <a class="navbar-item navbar-end" href="{% url 'users:register' %}"
