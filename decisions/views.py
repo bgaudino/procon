@@ -18,7 +18,6 @@ class DecisionView(ProtectedView, generic.ListView):
     def get_queryset(self):
         user = self.request.user
         decisions = DecisionView.model.objects.filter(user=user)
-        decision_status = self.kwargs.get("status")
         decision_status = self.request.GET.get("status")
         if decision_status == "open":
             decisions = decisions.exclude(options__is_chosen=True)

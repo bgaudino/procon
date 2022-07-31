@@ -3,10 +3,10 @@ from django.db.models import Sum
 from django.urls import reverse
 from django.conf import settings
 
-from core.models import TimestampMixin
+from core.models import TimestampedModel
 
 
-class Decision(TimestampMixin):
+class Decision(TimestampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -18,7 +18,7 @@ class Decision(TimestampMixin):
         return reverse("decisions:detail", kwargs={"pk": self.pk})
 
 
-class Option(TimestampMixin):
+class Option(TimestampedModel):
     decision = models.ForeignKey(
         Decision, related_name="options", on_delete=models.CASCADE
     )
@@ -41,7 +41,7 @@ class Option(TimestampMixin):
         return (pro_sum or 0) - (con_sum or 0)
 
 
-class Pro(TimestampMixin):
+class Pro(TimestampedModel):
     option = models.ForeignKey(Option, related_name="pros", on_delete=models.CASCADE)
     description = models.TextField()
     weight = models.IntegerField(default=1)
@@ -50,7 +50,7 @@ class Pro(TimestampMixin):
         return self.description
 
 
-class Con(TimestampMixin):
+class Con(TimestampedModel):
     option = models.ForeignKey(Option, related_name="cons", on_delete=models.CASCADE)
     description = models.TextField()
     weight = models.IntegerField(default=1)
